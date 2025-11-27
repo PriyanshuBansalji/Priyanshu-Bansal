@@ -14,7 +14,20 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "dark";
+    }
+    return "dark";
+  });
+    // Update document class and persist theme
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        document.documentElement.classList.remove("dark", "light");
+        document.documentElement.classList.add(theme);
+        localStorage.setItem("theme", theme);
+      }
+    }, [theme]);
   const [systemStatus, setSystemStatus] = useState("Online");
 
   useEffect(() => {
@@ -70,7 +83,7 @@ const Navigation = () => {
             className="hidden md:inline-flex items-center justify-center p-2 rounded-lg border border-border hover:bg-muted/30 transition-colors mr-2"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
-            {theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
           {/* Desktop Navigation */}
