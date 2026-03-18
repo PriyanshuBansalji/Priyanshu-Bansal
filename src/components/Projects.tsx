@@ -100,11 +100,25 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-24 relative">
-      {/* Background decoration */}
+    <section id="projects" className="py-24 relative overflow-hidden">
+      {/* Enhanced Background decoration with animations */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-40 h-40 border border-border/30 rounded-full" />
-        <div className="absolute bottom-1/4 -right-20 w-60 h-60 border border-border/20 rounded-full" />
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-1/4 -left-20 w-40 h-40 border border-primary/20 rounded-full"
+        />
+        <motion.div 
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute bottom-1/4 -right-20 w-60 h-60 border border-primary/15 rounded-full"
+        />
+        {/* Additional animated orbs */}
+        <motion.div 
+          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+          transition={{ duration: 12, repeat: Infinity }}
+          className="absolute top-1/2 right-1/3 w-32 h-32 bg-primary/10 rounded-full blur-3xl"
+        />
       </div>
       
       <div className="container mx-auto px-6 relative">
@@ -133,19 +147,26 @@ const Projects = () => {
             >
               {/* Project Image/Placeholder */}
               <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.05, rotateY: 5 }}
+                transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
                 className={`lg:col-span-7 ${
                   index % 2 === 1 ? "lg:order-2" : ""
                 }`}
               >
-                <div className="relative group cursor-pointer">
-                  <div className="aspect-video rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-secondary border border-border/50 overflow-hidden flex items-center justify-center relative">
-                    {/* Project image */}
-                    <img
+                <div className="relative group cursor-pointer perspective">
+                  <motion.div 
+                    className="aspect-video rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-secondary border-2 border-primary/30 overflow-hidden flex items-center justify-center relative group-hover:border-primary/70 transition-all duration-500 shadow-xl"
+                    whileHover={{ 
+                      boxShadow: "0 0 50px rgba(172, 255, 240, 0.4)",
+                      borderColor: "rgba(172, 255, 240, 0.7)"
+                    }}
+                  >
+                    {/* Project image with glow */}
+                    <motion.img
                       src={project.image}
                       alt={project.title + " logo"}
-                      className="max-h-48 max-w-full object-contain rounded-xl drop-shadow-lg transition-transform duration-300 group-hover:scale-105"
+                      className="max-h-48 max-w-full object-contain rounded-xl drop-shadow-lg transition-all duration-300"
+                      whileHover={{ scale: 1.2, filter: "brightness(1.2)" }}
                     />
                     {/* Live preview overlay on hover */}
                     {project.live && project.live !== "#" && (
@@ -164,91 +185,142 @@ const Projects = () => {
                         View Project <ArrowUpRight size={16} />
                       </span>
                     </div>
-                  </div>
-                  {/* Decorative glow */}
-                  <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/30 transition-all" />
-                  <div className="absolute -top-4 -left-4 w-16 h-16 bg-primary/10 rounded-full blur-xl" />
+                  </motion.div>
+                  
+                  {/* Decorative glow with animations */}
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary/30 rounded-full blur-3xl group-hover:bg-primary/50 transition-all"
+                  />
+                  <motion.div 
+                    animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.25, 0.15] }}
+                    transition={{ duration: 5, repeat: Infinity }}
+                    className="absolute -top-4 -left-4 w-16 h-16 bg-primary/20 rounded-full blur-2xl"
+                  />
                 </div>
               </motion.div>
 
-              {/* Project Info */}
+              {/* Project Info with staggered animations */}
               <div
                 className={`lg:col-span-5 ${
                   index % 2 === 1 ? "lg:order-1" : ""
                 }`}
               >
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  className="mono text-primary text-sm mb-2"
-                >
-                  Featured Project • {project.year}
-                </motion.p>
-                
-                <motion.h3 
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-2xl md:text-3xl font-bold mb-4 hover:text-primary transition-colors cursor-pointer group"
-                >
-                  {project.title}
-                  <ArrowUpRight className="inline-block ml-2 opacity-0 group-hover:opacity-100 transition-opacity" size={24} />
-                </motion.h3>
-                
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1 }
+                  }}
+                  initial="hidden"
+                  whileInView="visible"
                   viewport={{ once: true }}
-                  className={`glass-card p-6 mb-4 ${
-                    index % 2 === 1 ? "lg:-mr-16" : "lg:-ml-16"
-                  } relative z-10 hover:border-primary/30 transition-all`}
+                  className="space-y-4"
                 >
-                  <p className="text-muted-foreground leading-relaxed">
-                    {project.description}
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  className={`flex flex-wrap gap-3 mb-4 ${
-                    index % 2 === 1 ? "lg:justify-end" : ""
-                  }`}
-                >
-                  {project.tech.map((tech) => (
-                    <span 
-                      key={tech} 
-                      className="mono text-sm text-muted-foreground hover:text-primary transition-colors cursor-default"
-                    >
-                      {tech}
+                  <motion.p 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                    className="mono text-primary text-sm font-bold tracking-wider flex items-center gap-2 uppercase"
+                  >
+                    <span className="w-8 h-px bg-primary" />
+                    Featured Project • {project.year}
+                  </motion.p>
+                  
+                  <motion.h3 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 }}
+                    className="text-2xl md:text-4xl font-bold mb-4 hover:text-primary transition-colors cursor-pointer group inline-flex items-center gap-2"
+                  >
+                    <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+                      {project.title}
                     </span>
-                  ))}
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  className={`flex gap-4 ${
-                    index % 2 === 1 ? "lg:justify-end" : ""
-                  }`}
-                >
-                  <motion.a
-                    href={project.github}
-                    whileHover={{ y: -3 }}
-                    className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                    <motion.span
+                      animate={{ x: [0, 5, 0], y: [0, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ArrowUpRight size={24} className="text-primary" />
+                    </motion.span>
+                  </motion.h3>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className={`card-glow p-6 backdrop-blur-lg hover:backdrop-blur-xl transition-all duration-500 ${
+                      index % 2 === 1 ? "lg:-mr-16" : "lg:-ml-16"
+                    } relative z-10`}
                   >
-                    <Github size={22} />
-                  </motion.a>
-                  <motion.a
-                    href={project.live}
-                    whileHover={{ y: -3 }}
-                    className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                    <p className="text-muted-foreground leading-relaxed text-lg">
+                      {project.description}
+                    </p>
+                  </motion.div>
+                  
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.25 }}
+                    className={`flex flex-wrap gap-3 ${
+                      index % 2 === 1 ? "lg:justify-end" : ""
+                    }`}
                   >
-                    <ExternalLink size={22} />
-                  </motion.a>
+                    {project.tech.map((tech, techIndex) => (
+                      <motion.span 
+                        key={tech}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + (techIndex * 0.05) }}
+                        whileHover={{ scale: 1.1, color: "hsl(172 66% 50%)" }}
+                        className="mono text-sm text-muted-foreground hover:text-primary transition-all duration-300 px-3 py-1 rounded-full border border-primary/20 hover:border-primary/50 hover:bg-primary/10"
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.35 }}
+                    className={`flex gap-6 text-muted-foreground ${
+                      index % 2 === 1 ? "lg:justify-end" : ""
+                    }`}
+                  >
+                    <motion.a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ y: -5, scale: 1.2, color: "hsl(172 66% 50%)" }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2 hover:text-primary transition-all duration-300 relative group/link"
+                    >
+                      <Github size={24} />
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-primary/20 text-primary text-xs rounded opacity-0 group-hover/link:opacity-100 transition-opacity whitespace-nowrap">
+                        GitHub
+                      </span>
+                    </motion.a>
+                    <motion.a
+                      href={project.live}
+                      target={project.live !== "#" ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      whileHover={{ y: -5, scale: 1.2, color: "hsl(172 66% 50%)" }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2 hover:text-primary transition-all duration-300 relative group/link"
+                    >
+                      <ExternalLink size={24} />
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-primary/20 text-primary text-xs rounded opacity-0 group-hover/link:opacity-100 transition-opacity whitespace-nowrap">
+                        {project.live === "#" ? "Coming Soon" : "Live"}
+                      </span>
+                    </motion.a>
+                  </motion.div>
                 </motion.div>
               </div>
             </motion.div>
